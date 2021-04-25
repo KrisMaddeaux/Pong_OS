@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -96,6 +97,9 @@
     <PostBuildEvent>
       <Command>C:\Users\kprmm\AppData\Local\bin\NASM\nasm.exe C:\Users\kprmm\Documents\GitHub\Pong_OS\Pong_OS\boot_sect.asm -f bin -o C:\Users\kprmm\Documents\GitHub\Pong_OS\Pong_OS\boot_sect.bin</Command>
     </PostBuildEvent>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -143,6 +147,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <MASM Include="boot_sect.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <NASM Include="print_string.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </NASM>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

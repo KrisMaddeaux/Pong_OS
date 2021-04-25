@@ -19,4 +19,9 @@
       <Filter>Source Files</Filter>
     </MASM>
   </ItemGroup>
+  <ItemGroup>
+    <NASM Include="print_string.asm">
+      <Filter>Source Files</Filter>
+    </NASM>
+  </ItemGroup>
 </Project>

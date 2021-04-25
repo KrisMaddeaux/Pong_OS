@@ -95,7 +95,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>C:\Users\kprmm\AppData\Local\bin\NASM\nasm.exe C:\Users\kprmm\Documents\GitHub\Pong_OS\Pong_OS\boot_sect.asm -f bin -o C:\Users\kprmm\Documents\GitHub\Pong_OS\Pong_OS\boot_sect.bin</Command>
+      <Command>"$(NasmPath)"nasm.exe $(ProjectDir)boot_sect.asm -f bin -o $(ProjectDir)boot_sect.bin</Command>
     </PostBuildEvent>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>

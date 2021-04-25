@@ -23,5 +23,8 @@
     <NASM Include="print_string.asm">
       <Filter>Source Files</Filter>
     </NASM>
+    <NASM Include="disk_load.asm">
+      <Filter>Source Files</Filter>
+    </NASM>
   </ItemGroup>
 </Project>

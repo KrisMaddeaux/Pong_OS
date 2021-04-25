@@ -33,6 +33,7 @@ PrintHex:
 	shr al, 4
 	call HandleHexValue
 
+	call PrintNewLine
 	ret
 
 HandleHexValue:
@@ -70,4 +71,16 @@ PrintString:
 		jmp loopString
 
 	exitPrintString:
+		call PrintNewLine
 		ret
+
+;------------------------------------------------------------------------
+; Print Newline
+;------------------------------------------------------------------------
+PrintNewLine:
+	mov ah, 0x0e	; int  10/ah = 0eh -> scrolling teletype BIOS routine
+	mov al, 10		; 10 is decimal for the newline character
+	int 0x10		; print from al register
+	mov al, 13		; 13 is decimal for the carriage return character
+	int 0x10		; print from al register
+	ret

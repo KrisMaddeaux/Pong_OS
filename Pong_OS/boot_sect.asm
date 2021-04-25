@@ -1,12 +1,39 @@
 ;
-; A simple  boot  sector  program  that  loops  forever.
+; simple boot sector that prints a message to th  screen using a BIOS routine.
 ;
 
-loop:                     ; Define a label , "loop", that  will  allow us to jump  back to it , forever.
-jmp  loop               ; Use a simple CPU instruction that jumps to a new  memory address to continue execution. In our case , jump to the  address  of the  current; instruction.
+[org 0x7c00]	; Tell the assembler where this code will be loaded
 
-times  510-($-$$) db 0 ; When  compiled , our  program  must  fit  into  512 bytes ,; with  the  last  two  bytes  being  the  magic  number ,; so here , tell  our  assembly  compiler  to pad  out  our
-						; program  with  enough  zero  bytes (db 0) to  bring  us to the; 510th  byte.
+mov bx, helloWorldString
+call PrintString
 
-dw 0xaa55                ; Last  two  bytes (one  word) form  the  magic  number , so BIOS  knows  we are a boot  sector.
+jmp $			; Jump to the  current  address (i.e.  forever).
+
+helloWorldString:
+	db "Hello World!", 0
+
+; Expect string to be in the bx register
+PrintString:
+	mov ah, 0x0e	; int  10/ah = 0eh -> scrolling teletype BIOS routine
+	loopString:
+		mov al, [bx]	; get the first character of the string and store in al register
+		cmp al, 0		; check if we reached the end of the string
+			je exitPrintString
+
+		int 0x10		; print from al register
+
+		inc bx			; increment bx register
+		jmp loopString
+
+	exitPrintString:
+		ret
+
+;
+; Padding  and  magic  BIOS  number.
+;
+
+times  510-($-$$) db 0	; When compiled, our program must fit into 512 bytes, with the last two byte being the magic number, so here, tell our assembly compiler to pad out our
+						; program with enough zero bytes (db 0) to bring us to the; 510th byte.
+
+dw 0xaa55				; Last two bytes (one word) from the magic number, so BIOS knows we are a boot sector.
 

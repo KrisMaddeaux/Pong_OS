@@ -26,5 +26,8 @@
     <NASM Include="disk_load.asm">
       <Filter>Source Files</Filter>
     </NASM>
+    <NASM Include="global_descriptor_table.asm">
+      <Filter>Source Files</Filter>
+    </NASM>
   </ItemGroup>
 </Project>

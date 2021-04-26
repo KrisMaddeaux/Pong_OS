@@ -1,4 +1,10 @@
 ;------------------------------------------------------------------------
+;------------------------------------------------------------------------
+; 16 BIT REAL MODE PRINT FUNCTIONS
+;------------------------------------------------------------------------
+;------------------------------------------------------------------------
+
+;------------------------------------------------------------------------
 ; Print Hex
 ;------------------------------------------------------------------------
 
@@ -84,3 +90,45 @@ PrintNewLine:
 	mov al, 13		; 13 is decimal for the carriage return character
 	int 0x10		; print from al register
 	ret
+
+;------------------------------------------------------------------------
+;------------------------------------------------------------------------
+; 32 BIT PROTECTED MODE PRINT FUNCTIONS
+;------------------------------------------------------------------------
+;------------------------------------------------------------------------
+
+[bits  32]
+; Define some constants
+VIDEO_MEMORY equ 0xb8000
+
+; Font templates, see https://en.wikipedia.org/wiki/VGA_text_mode#Text_buffer for details
+WHITE_ON_BLACK equ 0x0f
+RED_ON_BLACK equ 0xC
+GREEN_ON_BLACK equ 0xA
+WHITE_ON_BLACK_BLINK equ 0x8F
+
+; Expect string to be in the ebx register
+PrintString32:
+	pusha
+	mov edx , VIDEO_MEMORY			; Set edx to the start of vid mem.
+
+	loopString32:
+		mov al, [ebx]				; Store the char at EBX in AL
+		mov ah, GREEN_ON_BLACK		; Store the attributes in AH
+	
+		cmp al, 0					; if (al == 0), at end of string , so
+			je exitPrintString32	; jump to done
+	
+		mov [edx], ax				; Store char and attributes at current; character cell.
+	
+		add ebx , 1					; Increment EBX to the next char in string.
+		add edx , 2					; Move to next character cell in vid mem. Each character cell is represented by two bytes. 
+									; The first byte is the ASCII code of the character.
+									; The second byte encodes the character's attributes such as the foreground/background colour, if the character should be blinking, etc.
+	
+		jmp  loopString32			; loop around to print the next char.
+	
+	exitPrintString32:
+		popa
+		ret							; Return from the function
+

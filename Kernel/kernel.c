@@ -6,3 +6,6 @@ void start()
 	*video_memory = 'X';
 }
 
+// Adding a main function just to make the visual studio compiler happy. Not actually used. start() is our actual main
+//void main(){}
+

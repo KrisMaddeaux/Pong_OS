@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{A9687BCF-7C3B-48BA-94CD-E45A7A53AA79}</ProjectGuid>
-    <RootNamespace>Kernel</RootNamespace>
+    <ProjectGuid>{19BFCB52-5D70-46F4-8EA7-9948B2253AC8}</ProjectGuid>
+    <RootNamespace>OSBuilder</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -53,6 +53,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\nasm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -87,21 +88,23 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <BaseAddress>
-      </BaseAddress>
-      <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <FixedBaseAddress>false</FixedBaseAddress>
-      <DataExecutionPrevention>true</DataExecutionPrevention>
-      <SectionAlignment>
-      </SectionAlignment>
-      <EntryPointSymbol>
-      </EntryPointSymbol>
     </Link>
+    <PostBuildEvent>
+      <Command>cd $(SolutionDir)Boot_Sector
+"$(NasmPath)"nasm.exe $(SolutionDir)Boot_Sector\boot_sect.asm -f bin -o $(SolutionDir)Boot_Sector\boot_sect.bin
+
+C:\cygwin\bin\bash --login -c "gcc -ffreestanding -c C:/Users/kprmm/Documents/GitHub/Pong_OS/Kernel/kernel.c -o C:/Users/kprmm/Documents/GitHub/Pong_OS/Kernel/kernel.o"
+"$(NasmPath)"nasm.exe $(SolutionDir)Kernel\kernel_entry.asm -f win -o $(SolutionDir)Kernel\kernel_entry.o
+
+C:\cygwin\bin\bash --login -c "ld -o C:/Users/kprmm/Documents/GitHub/Pong_OS/Kernel/kernel.tmp -Ttext 0x1000 C:/Users/kprmm/Documents/GitHub/Pong_OS/Kernel/kernel_entry.o C:/Users/kprmm/Documents/GitHub/Pong_OS/Kernel/kernel.o "
+C:\cygwin\bin\bash --login -c "objcopy -O binary -j .text  C:/Users/kprmm/Documents/GitHub/Pong_OS/Kernel/kernel.tmp C:/Users/kprmm/Documents/GitHub/Pong_OS/Kernel/kernel.bin"
+
+C:\cygwin\bin\bash --login -c "cat C:/Users/kprmm/Documents/GitHub/Pong_OS/Boot_Sector/boot_sect.bin C:/Users/kprmm/Documents/GitHub/Pong_OS/Kernel/kernel.bin &gt; C:/Users/kprmm/Documents/GitHub/Pong_OS/os-image"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -148,12 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="kernel.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="kernel_entry.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\nasm.targets" />
   </ImportGroup>
 </Project>

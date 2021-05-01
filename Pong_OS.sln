@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pong_OS", "Pong_OS\Pong_OS.vcxproj", "{5A8180F5-443B-455C-BA5B-40123E002CE8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Boot_Sector", "Boot_Sector\Boot_Sector.vcxproj", "{5A8180F5-443B-455C-BA5B-40123E002CE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

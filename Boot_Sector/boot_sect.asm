@@ -1,8 +1,6 @@
-;
-; simple boot sector that prints a message to the screen using a BIOS routine.
-;
-
 [org 0x7c00]	; Tell the assembler where this code will be loaded
+
+	mov [g_bootDrive], dl ; BIOS stores our boot drive in DL, so it's best to remember this for later.
 
 	mov bp, 0x9000	; Set the stack.
 	mov sp, bp
@@ -13,6 +11,8 @@
 	mov bx, g_msgRealMode
 	call PrintString
 
+	call LoadKernel
+
 	call SwitchToPM	; Note that we never return from here.
 
 	jmp $
@@ -20,9 +20,20 @@
 ; Includes
 %include "print_string.asm"
 %include "global_descriptor_table.asm"
-;%include "disk_load.asm"
+%include "disk_load.asm"
 
-[bits  16]	; Switch  to  protected  mode
+[bits  16]
+LoadKernel:
+	mov bx, g_msgLoadKernel
+	call PrintString
+
+	mov bx, g_kernelOffset	; Setup parameters for our DiskLoad routine, so that we load the first 15 sectors (excluding the boot sector) from the boot disk (i.e. our kernel code) to address KERNEL_OFFSET
+	mov dh, 15
+	mov dl, [g_bootDrive]
+	call  DiskLoad
+	
+	ret
+
 SwitchToPM:
 	cli						; (clear interrupts) We must switch off interrupts until we have setup the protected mode interrupt vector otherwise interrupts will run riot.
 
@@ -53,12 +64,18 @@ BeginPM:
 	mov ebx , g_msgProtectedMode
 	call PrintString32		; Use our 32-bit print routine.
 
+	call g_kernelOffset		; Now jump to the address of our loaded kernel code.
+
 	jmp $					; Hang.
 
 ; Global variables
+g_kernelOffset equ 0x1000 ; This is the memory offset to which we will load our kernel
+g_bootDrive db 0
+
 g_helloWorldString: db "Hello, welcome to Kris' super cool OS!", 0
 g_msgRealMode: db "Started in 16-bit Real Mode", 0
 g_msgProtectedMode: db "Successfully landed in 32-bit Protected Mode", 0
+g_msgLoadKernel: db "Loading kernel into memory", 0
 
 ;
 ; Padding  and  magic  BIOS  number.

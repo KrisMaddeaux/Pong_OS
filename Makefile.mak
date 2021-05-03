@@ -3,8 +3,6 @@ KERNEL_OBJ_FILES = ${KERNEL_SOURCE_FILES:.c=.o}
 
 BOOT_SECTOR_ASM = $(wildcard Boot_Sector/*.asm)
 
-NASMPATH = "C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/nasm.exe"
-
 # ----------------------------------------------------------------------------------
 # Operating System Image Rules
 # ----------------------------------------------------------------------------------
@@ -16,7 +14,7 @@ os-image : Boot_Sector/boot_sect.bin Kernel/kernel.bin
 # ----------------------------------------------------------------------------------
 Boot_Sector/boot_sect.bin : $(BOOT_SECTOR_ASM)
 	cd Boot_Sector; \
-	$(NASMPATH) boot_sect.asm -f bin -o $(@F)
+	nasm boot_sect.asm -f bin -o $(@F)
 
 # ----------------------------------------------------------------------------------
 # Kernel Rules
@@ -28,7 +26,7 @@ Kernel/kernel.tmp : Kernel/kernel_entry.o $(KERNEL_OBJ_FILES)
 	ld -o $@ -Ttext 0x1000 $^
 
 Kernel/kernel_entry.o : Kernel/kernel_entry.asm
-	$(NASMPATH) $^ -f win -o $@
+	nasm $^ -f win -o $@
 
 # ----------------------------------------------------------------------------------
 # Generic Rules

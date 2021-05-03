@@ -13,6 +13,11 @@
 
 	call LoadKernel
 
+	; Switch to graphics 320 x 200, 256 colour mode
+	mov ah, 0x00
+	mov al, 0x13
+	int 0x10
+
 	call SwitchToPM	; Note that we never return from here.
 
 	jmp $
@@ -61,8 +66,8 @@ InitializePM:
 
 ; This is  where we  arrive  after  switching  to and  initialising  protected  mode.
 BeginPM:
-	mov ebx , g_msgProtectedMode
-	call PrintString32		; Use our 32-bit print routine.
+	;mov ebx , g_msgProtectedMode
+	;call PrintString32		; Use our 32-bit print routine.
 
 	call g_kernelOffset		; Now jump to the address of our loaded kernel code.
 

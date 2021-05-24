@@ -11,6 +11,10 @@
 	mov bx, g_msgRealMode
 	call PrintString
 
+	; Added check to see if the A20 Line is enabled. It seems to be already enabled. So ignoring implementing functionality to turn it on
+;    call CheckA20
+;    call PrintA20Status
+
 	call LoadKernel
 
 	; Switch to graphics 320 x 200, 256 colour mode
@@ -38,6 +42,77 @@ LoadKernel:
 	call  DiskLoad
 	
 	ret
+
+; Function: CheckA20
+;
+; Purpose: to check the status of the a20 line in a completely self-contained state-preserving way.
+;
+; Returns: 0 in ax if the a20 line is disabled (memory wraps around)
+;          1 in ax if the a20 line is enabled (memory does not wrap around)
+ 
+;	CheckA20:
+;	    pushf
+;	    push ds
+;	    push es
+;	    push di
+;	    push si
+;	 
+;	    cli
+;	 
+;	    xor ax, ax ; ax = 0
+;	    mov es, ax
+;	 
+;	    not ax ; ax = 0xFFFF
+;	    mov ds, ax
+;	 
+;	    mov di, 0x0500
+;	    mov si, 0x0510
+;	 
+;	    mov al, byte [es:di]
+;	    push ax
+;	 
+;	    mov al, byte [ds:si]
+;	    push ax
+;	 
+;	    mov byte [es:di], 0x00
+;	    mov byte [ds:si], 0xFF
+;	 
+;	    cmp byte [es:di], 0xFF
+;	 
+;	    pop ax
+;	    mov byte [ds:si], al
+;	 
+;	    pop ax
+;	    mov byte [es:di], al
+;	 
+;	    mov ax, 0
+;	    je check_a20__exit
+;	 
+;	    mov ax, 1
+;	 
+;	    check_a20__exit:
+;	        pop si
+;	        pop di
+;	        pop es
+;	        pop ds
+;	        popf
+;	     
+;	    ret
+;	
+;	PrintA20Status:
+;	    cmp ax, 0
+;	        je printA20StatusDisabled
+;	        jne printA20StatusEnabled
+;	
+;	    printA20StatusDisabled:
+;	        mov bx, g_msgA20Disabled
+;	        call PrintString
+;	        ret
+;	
+;	    printA20StatusEnabled:
+;	        mov bx, g_msgA20Enabled
+;	        call PrintString
+;	        ret
 
 SwitchToPM:
 	cli						; (clear interrupts) We must switch off interrupts until we have setup the protected mode interrupt vector otherwise interrupts will run riot.
@@ -81,6 +156,8 @@ g_helloWorldString: db "Hello, welcome to Kris' super cool OS!", 0
 g_msgRealMode: db "Started in 16-bit Real Mode", 0
 g_msgProtectedMode: db "Successfully landed in 32-bit Protected Mode", 0
 g_msgLoadKernel: db "Loading kernel into memory", 0
+;g_msgA20Enabled: db "The A20 Line is Enabled!", 0
+;g_msgA20Disabled: db "The A20 Line is Disabled!", 0
 
 ;
 ; Padding  and  magic  BIOS  number.

@@ -148,10 +148,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="font.c" />
     <ClCompile Include="kernel.c" />
+    <ClCompile Include="screen.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="kernel_entry.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="font.h" />
+    <ClInclude Include="screen.h" />
+    <ClInclude Include="util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

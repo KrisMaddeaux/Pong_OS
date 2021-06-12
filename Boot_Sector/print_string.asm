@@ -8,7 +8,7 @@
 ; Print Hex
 ;------------------------------------------------------------------------
 
-; Expect hex value to be in the dx register
+; Expect hex value to be in the bx register
 PrintHex:
 	mov ah, 0x0e	; int  10/ah = 0eh -> scrolling teletype BIOS routine
 
@@ -18,24 +18,24 @@ PrintHex:
 	mov al, "x"
 	int 0x10
 
-	; The dx register is 16 bits (2 bytes). 1 hex byte (8 bits) is represented by 2 characters.
-	; So each individual hex character is 4 bits. dx is divided into dh and dl (8 bits each).
-	; So we can get the needed four bits by bitshifting dh and dl
-	mov al, dh
+	; The bx register is 16 bits (2 bytes). 1 hex byte (8 bits) is represented by 2 characters.
+	; So each individual hex character is 4 bits. bx is divided into bh and bl (8 bits each).
+	; So we can get the needed four bits by bitshifting bh and bl
+	mov al, bh
 	shr al, 4
 	call HandleHexValue
 
 	shl dh, 4
-	mov al, dh
+	mov al, bh
 	shr al, 4
 	call HandleHexValue
 
-	mov al, dl
+	mov al, bl
 	shr al, 4
 	call HandleHexValue
 
 	shl dl, 4
-	mov al, dl
+	mov al, bl
 	shr al, 4
 	call HandleHexValue
 
